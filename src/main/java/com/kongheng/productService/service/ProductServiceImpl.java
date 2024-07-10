@@ -1,8 +1,10 @@
 package com.kongheng.productService.service;
 
 import com.kongheng.productService.entity.Product;
+import com.kongheng.productService.entity.ProductResponse;
 import com.kongheng.productService.model.ProductRequest;
 import com.kongheng.productService.repository.ProductRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,5 +23,16 @@ public class ProductServiceImpl implements ProductService {
             .build();
         productRepository.save(product);
         return product.getProductId();
+    }
+
+    @Override
+    public ProductResponse getProductById(long productId) {
+        Product product = productRepository.findById(productId)
+            .orElseThrow(
+                () -> new RuntimeException("Product with given id not found")
+            );
+        ProductResponse productResponse = new ProductResponse();
+        BeanUtils.copyProperties(product, productResponse);
+        return productResponse;
     }
 }

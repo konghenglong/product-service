@@ -2,6 +2,7 @@ package com.kongheng.productService.service;
 
 import com.kongheng.productService.entity.Product;
 import com.kongheng.productService.entity.ProductResponse;
+import com.kongheng.productService.exception.ProductServiceCustomException;
 import com.kongheng.productService.model.ProductRequest;
 import com.kongheng.productService.repository.ProductRepository;
 import org.springframework.beans.BeanUtils;
@@ -29,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse getProductById(long productId) {
         Product product = productRepository.findById(productId)
             .orElseThrow(
-                () -> new RuntimeException("Product with given id not found")
+                () -> new ProductServiceCustomException("Product with given id not found", "PRODUCT_NOT_FOUND")
             );
         ProductResponse productResponse = new ProductResponse();
         BeanUtils.copyProperties(product, productResponse);
